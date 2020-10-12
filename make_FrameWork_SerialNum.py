@@ -3,16 +3,28 @@ Author: YanQiaoYu
 Github: https://github.com/yanqiaoyu?tab=repositories
 Date: 2020-09-10 14:48:29
 LastEditors: YanQiaoYu
-LastEditTime: 2020-09-10 19:29:37
+LastEditTime: 2020-10-09 10:24:16
 FilePath: \Automated_MySQLAudit_Test\make_FrameWork_SerialNum.py
 '''
 import mysql.connector
 import sys
 import os
-from makeFactory import mySniff, GloConfig
+from makeFactory import mySniff, GloConfig, SniffDeco
 
 class make_FrameWork_SerialNum:
-    
+    #抓包时常，如果交互时间比较长，可以适当调整
+    timeout = GloConfig["TimeOut"]
+    #测试脚本部署所在机器的IP地址
+    LocalIP = GloConfig["LocalIP"]
+    #测试数据库所在的IP地址
+    MySQLIP = GloConfig["MySQLIP"]
+    '''
+    如下区域定义属于自己填写的变量
+    '''        
+    #过滤条件，这个无需修改
+    filterString = "host {} and host {}".format(LocalIP, MySQLIP)
+    #抓好的包的存放位置
+    FileDir = "./Packet/01-FrameWork/03-SerialNum/"    
     def __init__(self):
         #测试脚本部署所在机器的IP地址
         self.LocalIP = GloConfig["LocalIP"]
@@ -79,6 +91,46 @@ class make_FrameWork_SerialNum:
 
         cnx.close()       
         
+
+    '''
+	#命令起始阶段，序列号从0开始，互过程中，序列号按+1的步长递增
+    '''
+    @SniffDeco(timeout, filterString, FileDir)
+    def Datasec_audit_mysql_protocol_03_001(self):
+        try:
+            cnx = mysql.connector.connect(user=self.MySQL_User, password=self.MySQL_Password,
+                                host=self.MySQLIP,
+                                ssl_disabled='True',
+                                database='DataSercurity'
+                                )        
+            cmd = cnx.cursor()
+            cmd.execute("desc Test1")
+            cmd.fetchall()
+        except:
+            cmd.close()
+            cnx.close()
+
+    '''
+	#不同的命令，序列号重新计时，互过程中，序列号按+1的步长递增
+    '''
+    @SniffDeco(timeout, filterString, FileDir)
+    def Datasec_audit_mysql_protocol_03_002(self):
+        try:
+            cnx = mysql.connector.connect(user=self.MySQL_User, password=self.MySQL_Password,
+                                host=self.MySQLIP,
+                                ssl_disabled='True',
+                                database='DataSercurity'
+                                )        
+            cmd = cnx.cursor()
+            cmd.execute("desc Test1")
+            cmd.fetchall()
+            cmd.execute("desc Test2")
+            cmd.fetchall()
+        except:
+            cmd.close()
+            cnx.close()
+
 make_FrameWork_SerialNum = make_FrameWork_SerialNum()
-make_FrameWork_SerialNum.make_SerialNumAdd()
-make_FrameWork_SerialNum.make_SerialNumReset()
+
+#make_FrameWork_SerialNum.Datasec_audit_mysql_protocol_03_001()
+#make_FrameWork_SerialNum.Datasec_audit_mysql_protocol_03_002()
