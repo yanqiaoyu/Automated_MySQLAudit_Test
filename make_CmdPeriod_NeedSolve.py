@@ -56,7 +56,7 @@ class make_NeedSolveCmd:
     @SniffDeco(timeout, filterString, FileDir)
     def Datasec_audit_mysql_protocol_10_001(self):
         try:
-            cnx = mysql.connector.connect(user=self.MySQL_User, password=self.MySQL_Password,
+            cnx = mysql.connector. connect(user=self.MySQL_User, password=self.MySQL_Password,
                                 host=self.MySQLIP,
                                 ssl_disabled='True',
                                 )        

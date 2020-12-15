@@ -3,7 +3,7 @@ Author: YanQiaoYu
 Github: https://github.com/yanqiaoyu?tab=repositories
 Date: 2020-09-10 14:48:29
 LastEditors: YanQiaoYu
-LastEditTime: 2020-10-09 15:56:31
+LastEditTime: 2020-12-03 15:58:51
 FilePath: \Automated_MySQLAudit_Test\make_FrameWork_AbnormalPacket.py
 '''
 import mysql.connector
@@ -281,4 +281,4 @@ make_FrameWork_AbnormalPacket = make_FrameWork_AbnormalPacket()
 #make_FrameWork_AbnormalPacket.Datasec_audit_mysql_protocol_04_005()
 #make_FrameWork_AbnormalPacket.Datasec_audit_mysql_protocol_04_006()
 #make_FrameWork_AbnormalPacket.Datasec_audit_mysql_protocol_04_007()
-#make_FrameWork_AbnormalPacket.Datasec_audit_mysql_protocol_04_008()
+make_FrameWork_AbnormalPacket.Datasec_audit_mysql_protocol_04_008()

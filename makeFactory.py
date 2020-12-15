@@ -3,7 +3,7 @@ Author: YanQiaoYu
 Github: https://github.com/yanqiaoyu?tab=repositories
 Date: 2020-09-09 14:32:40
 LastEditors: YanQiaoYu
-LastEditTime: 2020-10-12 11:39:06
+LastEditTime: 2020-11-11 11:11:19
 FilePath: \Automated_MySQLAudit_Test\makeFactory.py
 '''
 
@@ -19,8 +19,8 @@ from scapy.all import *
 GloConfig = {
     "LocalIP":"10.32.128.38",
     "MySQLIP":"103.45.103.253",
-    "MySQL_User":"",
-    "MySQL_Password":"",
+    "MySQL_User":"root",
+    "MySQL_Password":"yqy0325dwj",
     "TimeOut":1    
 }
 
@@ -35,7 +35,7 @@ class mySniff(threading.Thread):
 
     def run(self):
         package = sniff(timeout=self.timeout, filter=self.filter)
-        if package:
+        if package: 
             print("[{}]Capture Successfully!:{}".format(self.FuncName, package))
         self.packageStack.append(package)
 

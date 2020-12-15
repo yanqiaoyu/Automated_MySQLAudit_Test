@@ -3,7 +3,7 @@ Author: YanQiaoYu
 Github: https://github.com/yanqiaoyu?tab=repositories
 Date: 2020-09-09 15:50:43
 LastEditors: YanQiaoYu
-LastEditTime: 2020-10-08 17:44:58
+LastEditTime: 2020-11-26 10:22:29
 FilePath: \Automated_MySQLAudit_Test\make_FrameWork_PacketLen.py
 '''
 import mysql.connector
@@ -107,7 +107,91 @@ class make_FrameWork_PacketLen:
             cmd.close()
             cnx.close()
 
+    '''
+	#1K场景
+    '''
+    @SniffDeco(5, filterString, FileDir)
+    def Datasec_audit_mysql_protocol_1K(self):
+        try:
+            cnx = mysql.connector.connect(user=self.MySQL_User, password=self.MySQL_Password,
+                                host=self.MySQLIP,
+                                ssl_disabled='True',
+                                )        
+            cmd = cnx.cursor()
+            
+            cmd.execute(
+                "Create Database If Not Exists MySQL_Audit_Test Character Set UTF8;"
+            )
+            cmd.execute(
+                "set global max_allowed_packet=524288000;"
+            )
+            cmd.execute(
+                "use MySQL_Audit_Test;"
+            )
+            cmd.execute(
+                "drop table student;"
+            )        
+            #建表
+            cmd.execute("create table if not exists student( \
+                        id int(4) primary key not null auto_increment, \
+                        phone longtext not null \
+                        );")          
+
+            #插入数据
+            cmd.execute(
+                "INSERT INTO student (phone) VALUES ('{}2')".format("1"*(2**10-41))
+            )                   
+
+            cnx.commit()
+        except:
+            cmd.close()
+            cnx.close()
+
+
+    '''
+	#略大于1K场景
+    '''
+    @SniffDeco(5, filterString, FileDir)
+    def Datasec_audit_mysql_protocol_greater_than_1K(self):
+        try:
+            cnx = mysql.connector.connect(user=self.MySQL_User, password=self.MySQL_Password,
+                                host=self.MySQLIP,
+                                ssl_disabled='True',
+                                )        
+            cmd = cnx.cursor()
+            
+            cmd.execute(
+                "Create Database If Not Exists MySQL_Audit_Test Character Set UTF8;"
+            )
+            cmd.execute(
+                "set global max_allowed_packet=524288000;"
+            )
+            cmd.execute(
+                "use MySQL_Audit_Test;"
+            )
+            cmd.execute(
+                "drop table student;"
+            )        
+            #建表
+            cmd.execute("create table if not exists student( \
+                        id int(4) primary key not null auto_increment, \
+                        phone longtext not null \
+                        );")          
+
+            #插入数据
+            cmd.execute(
+                "INSERT INTO student (phone) VALUES ('{}2')".format("1"*(2**10-40))
+            )                   
+
+            cnx.commit()
+        except:
+            cmd.close()
+            cnx.close()
+
+
 make_FrameWork_PacketLen = make_FrameWork_PacketLen()
 
 #make_FrameWork_PacketLen.Datasec_audit_mysql_protocol_02_001()
 #make_FrameWork_PacketLen.Datasec_audit_mysql_protocol_02_002()
+#make_FrameWork_PacketLen.Datasec_audit_mysql_protocol_1K()
+make_FrameWork_PacketLen.Datasec_audit_mysql_protocol_greater_than_1K()
